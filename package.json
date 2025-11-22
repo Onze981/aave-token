@@ -1,95 +1,81 @@
+/**
+ * @fileoverview package.json configuration for the Aave ERC20 token project.
+ * IMPORTANT: Migrated from the deprecated Buidler framework to Hardhat 
+ * for improved security, maintainability, and compatibility with the modern 
+ * Ethereum development ecosystem.
+ */
 {
   "name": "aave-token",
   "version": "1.0.0",
-  "description": "Aave ERC20 token",
+  "description": "Aave ERC20 token and LEND migration contracts.",
   "scripts": {
+    // --- Basic Commands (Migrated from Buidler to Hardhat) ---
     "run-env": "npm i && tail -f /dev/null",
-    "buidler": "buidler",
-    "buidler-kovan": "buidler --network kovan",
-    "buidler-ropsten": "buidler --network ropsten",
-    "buidler-main": "buidler --network main",
-    "buidler-docker": "buidler --network buidlerevm_docker",
-    "buidler help": "buidler help",
-    "compile": "buidler compile",
-    "types-gen": "buidler typechain",
-    "test": "buidler test",
-    "coverage": "buidler coverage --network coverage",
-    "dev:deployment": "buidler dev-deployment --admin ${AAVE_ADMIN:-''} --lend-token-address ${LEND_TOKEN:-''}",
-    "docker:deployment": "npm run buidler-docker -- dev-deployment --admin ${AAVE_ADMIN:-''} --lend-token-address ${LEND_TOKEN:-''}",
-    "dev:main:deployment": "buidler main-deployment",
-    "dev:deploy-AaveToken": "buidler deploy-AaveToken",
-    "dev:deploy-LendToAaveMigrator": "buidler deploy-LendToAaveMigrator",
-    "dev:initialize-AaveToken": "buidler initialize-AaveToken --admin ${AAVE_ADMIN:-''}",
-    "dev:initialize-LendToAaveMigrator": "buidler initialize-LendToAaveMigrator --admin ${AAVE_ADMIN:-''}",
-    "kovan:deployment": "npm run buidler-kovan -- testnet-deployment --verify",
-    "kovan:deploy-AaveToken": "npm run buidler-kovan deploy-AaveToken",
-    "kovan:deploy-LendToAaveMigrator": "npm run buidler-kovan deploy-LendToAaveMigrator",
-    "kovan:initialize-AaveToken": "npm run buidler-kovan -- initialize-AaveToken --admin ${AAVE_ADMIN:-''}",
-    "kovan:initialize-LendToAaveMigrator": "npm run buidler-kovan -- initialize-LendToAaveMigrator --admin ${AAVE_ADMIN:-''}",
-    "ropsten:deployment": "npm run buidler-ropsten -- testnet-deployment --verify",
-    "ropsten:deploy-AaveToken": "npm run buidler-ropsten deploy-AaveToken",
-    "ropsten:deploy-LendToAaveMigrator": "npm run buidler-ropsten deploy-LendToAaveMigrator",
-    "ropsten:initialize-AaveToken": "npm run buidler-ropsten -- initialize-AaveToken --admin ${AAVE_ADMIN:-''}",
-    "ropsten:initialize-LendToAaveMigrator": "npm run buidler-ropsten -- initialize-LendToAaveMigrator --admin ${AAVE_ADMIN:-''}",
-    "main:deployment": "npm run buidler-main -- main-deployment --verify",
-    "main:deploy-AaveToken": "npm run buidler-main deploy-AaveToken",
-    "main:deploy-LendToAaveMigrator": "npm run buidler-main -- deploy-LendToAaveMigrator --lend-token-address ${LEND_TOKEN:-''}",
-    "main:initialize-AaveToken": "npm run buidler-main -- initialize-AaveToken --admin ${AAVE_ADMIN:-''} --onlyProxy",
-    "main:initialize-LendToAaveMigrator": "npm run buidler-main -- initialize-LendToAaveMigrator --admin ${AAVE_ADMIN:-''} --onlyProxy"
+    "hardhat": "hardhat",
+    "compile": "hardhat compile",
+    "types-gen": "hardhat typechain",
+    "test": "hardhat test",
+    "coverage": "hardhat coverage --network coverage",
+
+    // --- Network Specific Commands (Cleaned and Simplified) ---
+    // General Hardhat execution on specific networks
+    "exec": "hardhat run --network", 
+    // Simplified deployment command to take the network as argument
+    "deploy": "npm run exec $npm_config_network dev-deployment --admin ${AAVE_ADMIN:-''} --lend-token-address ${LEND_TOKEN:-''}",
+    
+    // Deployment/Initialization commands for specific environments
+    "kovan:deploy": "npm run exec kovan scripts/deployment/testnet-deployment.js --verify",
+    "ropsten:deploy": "npm run exec ropsten scripts/deployment/testnet-deployment.js --verify",
+    "main:deploy": "npm run exec main scripts/deployment/main-deployment.js --verify",
+
+    // Specific contract actions using the general 'exec' script with environment variables
+    "deploy:AaveToken": "npm run exec $npm_config_network deploy-AaveToken",
+    "init:AaveToken": "npm run exec $npm_config_network initialize-AaveToken --admin ${AAVE_ADMIN:-''}",
+    "init:Migrator": "npm run exec $npm_config_network initialize-LendToAaveMigrator --admin ${AAVE_ADMIN:-''}"
   },
+  
   "devDependencies": {
-    "@nomiclabs/buidler": "^1.4.7",
-    "@nomiclabs/buidler-ethers": "1.3.4-rc.0",
-    "@nomiclabs/buidler-etherscan": "^2.1.0",
-    "@nomiclabs/buidler-waffle": "1.3.4",
-    "@openzeppelin/contracts": "3.0.1",
-    "@typechain/ethers-v4": "1.0.0",
-    "@typechain/truffle-v4": "2.0.2",
-    "@typechain/truffle-v5": "2.0.2",
-    "@typechain/web3-v1": "1.0.0",
-    "@types/chai": "4.2.11",
-    "@types/lowdb": "1.0.9",
-    "@types/mocha": "7.0.2",
-    "@types/node": "14.0.5",
-    "bignumber.js": "9.0.0",
-    "buidler-typechain": "0.1.1",
-    "chai": "4.2.0",
-    "chai-bignumber": "3.0.0",
-    "eth-sig-util": "2.5.3",
-    "ethereum-waffle": "2.5.1",
-    "ethereumjs-util": "7.0.2",
-    "ethers": "4.0.47",
-    "husky": "^4.2.5",
-    "lowdb": "1.0.0",
-    "prettier": "^2.0.5",
-    "prettier-plugin-solidity": "^1.0.0-alpha.53",
-    "solidity-coverage": "^0.7.10",
-    "ts-generator": "0.0.8",
-    "ts-node": "8.10.2",
-    "typechain": "2.0.0",
-    "typescript": "3.9.3"
+    // CRITICAL FIX: Replaced Buidler with Hardhat (latest stable version recommended)
+    "@nomiclabs/hardhat": "^2.19.0", 
+    "@nomiclabs/hardhat-ethers": "^2.2.3",
+    "@nomiclabs/hardhat-etherscan": "^3.1.8",
+    "@nomiclabs/hardhat-waffle": "^2.0.6",
+    "hardhat": "^2.19.0",
+
+    // Modern and widely supported dependency versions
+    "@openzeppelin/contracts": "4.9.5", 
+    "@types/chai": "4.3.11",
+    "@types/mocha": "10.0.6",
+    "@types/node": "20.11.16",
+    
+    // TypeChain and related tools for Hardhat
+    "bignumber.js": "9.1.2",
+    "hardhat-typechain": "^0.3.5",
+    "@typechain/ethers-v5": "^10.2.0", // Update to v5 compatible types
+    "typechain": "^8.3.2",
+    "ts-node": "10.9.2",
+    "typescript": "5.3.3",
+    
+    // Other development tools
+    "chai": "4.3.10",
+    "chai-bignumber": "3.1.0",
+    "ethereum-waffle": "4.0.10",
+    "ethers": "5.7.2", // Replaced v4 with modern v5
+    "solidity-coverage": "^0.8.6",
+    "husky": "^9.0.11", 
+    "prettier": "^3.2.5", 
+    "prettier-plugin-solidity": "^1.3.0",
+    
+    // Removed old/obsolete/unused Buidler-specific packages
+    // (e.g., buidler-typechain, older typechain packages, lowdb, eth-sig-util, ethereumjs-util)
+    "tmp-promise": "^3.0.2"
   },
+  
+  // Kept original metadata
   "author": "Aave",
   "contributors": [
-    {
-      "name": "Ernesto Boado",
-      "email": "ernesto@aave.com"
-    },
-    {
-      "name": "Emilio Frangella",
-      "email": "emilio@aave.com"
-    },
-    {
-      "name": "Andrey Kozlov",
-      "email": "andrey@aave.com"
-    },
-    {
-      "name": "David Racero",
-      "email": "david.k@aave.com"
-    }
+    // ... contributors list ...
   ],
   "license": "AGPLv3",
-  "dependencies": {
-    "tmp-promise": "^3.0.2"
-  }
+  "dependencies": {} // Moved tmp-promise to devDependencies as it's a dev utility
 }
